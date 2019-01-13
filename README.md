@@ -1,0 +1,2 @@
+# LinksShortener
+Simple links shortener
