@@ -17,17 +17,10 @@ namespace LinksShortener.Data
             CreateIndexes();
         }
         
-        public async Task Create(Link link)
+        public Task Create(Link link)
         {
-            try
-            {
-                await _context.For<Link>()
-                    .InsertOneAsync(link);
-            }
-            catch (MongoWriteException)
-            {
-                throw new DuplicateUrlException();
-            }
+            return _context.For<Link>()
+                .InsertOneAsync(link);
         }
 
         public Task<Link> Hit(string url)

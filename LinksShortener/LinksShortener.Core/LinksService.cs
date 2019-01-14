@@ -8,7 +8,7 @@ namespace LinksShortener.Core
 {
     public interface ILinksService
     {
-        Task Create(Link link);
+        Task<Link> Create(Link link);
 
         Task<string> Hit(string url);
 
@@ -20,37 +20,34 @@ namespace LinksShortener.Core
     public class LinksService : ILinksService
     {
         private readonly ILinksRepository _linksRepository;
+        private readonly ICounterRepository _counterRepository;
+        
         private readonly ILogger<LinksService> _logger;
 
         public LinksService(
             ILinksRepository linksRepository,
+            ICounterRepository counterRepository,
             ILogger<LinksService> logger
         )
         {
             _linksRepository = linksRepository;
+            _counterRepository = counterRepository;
+            
             _logger = logger;
         }
         
-        public async Task Create(Link link)
-        {
-            const int maxCreationAttempts = 10;
-
-            for (int i = 0; i < maxCreationAttempts; ++i)
-            {
-                try
-                {
-                    link.Url = "asd";
-                    await _linksRepository.Create(link);
-
-                    return;
-                }
-                catch (DuplicateUrlException)
-                {
-                }
-            }
+        public async Task<Link> Create(Link link)
+        {   
+            ValidateAndThrow(link);
             
-            _logger.LogError("failed to shorten link due to maxCreationAttempts limitation.");
-            throw new Exception();
+            link.CreatedAt = DateTime.Now;
+            var counter = await _counterRepository.Inc();
+            link.Url = CounterHelper.ToUrl(counter);
+
+            await _linksRepository.Create(link);
+            _logger.LogInformation($"Created link from {link.Url} to {link.Destination} owned by {link.OwnerId}");
+            
+            return link;
         }
 
         public async Task<string> Hit(string url)
@@ -68,6 +65,13 @@ namespace LinksShortener.Core
         public Task<List<Link>> GetAllByOwner(string ownerId)
         {
             return _linksRepository.GetAllByOwner(ownerId);
+        }
+
+        private void ValidateAndThrow(Link link)
+        {
+            if (!Uri.TryCreate(link.Destination, UriKind.Absolute, out var uriResult)
+                || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+                throw new Exception();
         }
     }
 }

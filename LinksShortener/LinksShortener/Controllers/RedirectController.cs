@@ -4,14 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LinksShortener.Controllers
 {
-    public class RootController : ControllerBase
+    [Route("r")]
+    public class RedirectController : ControllerBase
     {
         private readonly ILinksService _linksService;
 
-        public RootController(ILinksService linksService)
+        public RedirectController(ILinksService linksService)
         {
             _linksService = linksService;
-        }
+        }   
 
         [Route("{uri}")]
         public async Task<IActionResult> FollowLink(string uri)

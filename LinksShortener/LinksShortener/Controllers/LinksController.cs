@@ -16,7 +16,7 @@ namespace LinksShortener.Controllers
         }
 
         [HttpPost]
-        public Task CreateLink([FromBody] Link link)
+        public Task<Link> CreateLink([FromBody] Link link)
         {
             return _linksService.Create(link);
         }
