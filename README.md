@@ -18,5 +18,5 @@ Simple links shortener
 9. cp -r dist/links-shortener/* ../../LinksShortener/wwwroot
 10. setup mongo 3+
 11. change mongo url in /LinksShortener/published/appsettings.json (relative from repo root)
-12. dotnet /LinksShortener/published/LinksShortener.dll
+12. cd /LinksShortener/published; dotnet LinksShortener.dll
 13. localhost:34131
