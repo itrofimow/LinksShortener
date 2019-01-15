@@ -152,7 +152,7 @@
 
   <div [hidden]="isChangingLogin || myLinks.length == 0"
     class="centered" style="margin-top: 36px;">
-    <table style="table-layout: fixed; text-align: left">
+    <table style="text-align: left; width: 720px">
       <tr class="default-color" style="font-size: 11px">
         <td>ДАТА</td>
         <td>ОРИГИНАЛ</td>
@@ -160,11 +160,16 @@
         <td>COPY</td>
         <td>ПРОСМОТРОВ</td>
       </tr>
-      <tr class="default-H-color" *ngFor="let link of getMyLinksSorted(); let i = index"
-        style="white-space: nowrap; overflow: hidden">
-        <td>{{ parseDate(link.createdAt) }}</td>
-        <td style="max-width: 30%">{{ link.destination }}</td>
-        <td>{{ buildLink(link.url) }}</td>
+      <tr class="default-H-color" *ngFor="let link of getMyLinksSorted(); let i = index">
+        <td style="width: 120px">{{ parseDate(link.createdAt) }}</td>
+        <td style="width: 260px" title="{{link.destination}}">
+          {{ truncateText(link.destination, 30) }}
+        </td>
+        <td class="default-blue">
+          <a href="{{buildLink(link.url)}}" target="_newtab" style="color: inherit">
+            {{ buildLink(link.url) }}
+          </a>
+        </td>
         <td style="cursor: pointer" (click)="copyToClipboard(buildLink(link.url))">
           <img style="width: 24px; height: 24px" src="assets/copy.png">
         </td>

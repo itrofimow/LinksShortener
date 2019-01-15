@@ -3,6 +3,7 @@ import { AppState } from './app-state';
 import { FormGroup, FormControl} from '@angular/forms';
 import { BackendService} from './backend-service.service';
 import { LinkModel } from './link-model';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-root',
@@ -106,6 +107,12 @@ export class AppComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
+  }
+
+  truncateText(text: string, len: number) : string {
+    if (text.length <= len - 3) return text;
+
+    return text.substr(0, Math.max(0, len - 3)) + '...';
   }
 
   newLogin: string;
