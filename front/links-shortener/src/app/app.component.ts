@@ -54,6 +54,7 @@ export class AppComponent implements OnInit {
       result => {
         this.appState = AppState.success;
         this.shortenedUrl = result.url;
+        this.myLinks.push(result);
       },
       error => {
         this.appState = AppState.error;
@@ -74,8 +75,11 @@ export class AppComponent implements OnInit {
       'авг', 'сен', 'окт', 'ноя', 'дек'];
       
     let date = new Date(dateStr);
+    let mins = date.getMinutes();
+
     return date.getDay().toString() + ' ' + months[date.getMonth()] + ', '
-      + date.getHours() + ':' + date.getMinutes();
+      + date.getHours() + ':' + 
+      (mins > 10 ? mins : ('0' + mins.toString()));
   }
 
   transformLogin(login: string) : string {

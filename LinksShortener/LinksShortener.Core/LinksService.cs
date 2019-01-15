@@ -71,7 +71,7 @@ namespace LinksShortener.Core
         {
             if (!Uri.TryCreate(link.Destination, UriKind.Absolute, out var uriResult)
                 || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-                throw new Exception();
+                throw new Exception($"{link.Destination} is not in valid format, aborting");
         }
     }
 }
